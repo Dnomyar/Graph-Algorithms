@@ -16,23 +16,21 @@ class AdjacencyListUndirectedGraph(nodes: List[NodeUndirected]) extends IUndirec
 
   override def removeEdge(x: Int, y: Int): AdjacencyListUndirectedGraph =
     new AdjacencyListUndirectedGraph(
-      nodes.map {
+      nodes.mapIfDefined {
         case node if node.id == x =>
           node.copy(siblings = node.siblings.filterNot(_.id == y))
         case node if node.id == y =>
           node.copy(siblings = node.siblings.filterNot(_.id == x))
-        case node => node
       }
     )
 
   override def addEdge(x: Int, y: Int): AdjacencyListUndirectedGraph =
     new AdjacencyListUndirectedGraph(
-      nodes.map {
+      nodes.mapIfDefined {
         case node if node.id == x =>
           node.copy(siblings = nodes.find(_.id == y).get :: node.siblings)
         case node if node.id == y =>
           node.copy(siblings = nodes.find(_.id == x).get :: node.siblings)
-        case node => node
       }
     )
 
