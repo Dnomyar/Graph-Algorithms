@@ -1,6 +1,8 @@
 package fr.damienraymond.graph
+package graphimplementation.adjacencymatrix
 
-import scala.collection.immutable.Seq
+import fr.damienraymond.graph.IUndirectedGraph
+import fr.damienraymond.graph.model.matgraph.AdjMatGraph
 
 /**
   * Created by damien on 11/01/2017.

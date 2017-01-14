@@ -1,4 +1,4 @@
-package fr.damienraymond.graph
+package fr.damienraymond.graph.model.matgraph
 
 /**
   * Created by damien on 10/01/2017.

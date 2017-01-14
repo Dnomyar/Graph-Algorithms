@@ -1,5 +1,7 @@
 package fr.damienraymond.graph
+package utils
 
+import fr.damienraymond.graph.model.matgraph.AdjMatGraph
 
 import scala.util.Random
 

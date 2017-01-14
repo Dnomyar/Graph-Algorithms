@@ -1,5 +1,4 @@
-package fr.damienraymond.graph
-
+package fr.damienraymond.graph.model
 
 trait Node {
   val id: Int

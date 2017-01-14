@@ -1,4 +1,8 @@
 package fr.damienraymond.graph
+package graphimplementation.incidentmatrix
+
+import fr.damienraymond.graph.IUndirectedGraph
+import fr.damienraymond.graph.model.matgraph.{AdjMatGraph, IncMatGraph}
 
 import scala.collection.immutable.Seq
 

@@ -1,9 +1,9 @@
-package fr.damienraymond.graph
+package fr.damienraymond.graph.model.matgraph
 
 /**
   * Created by damien on 10/01/2017.
   */
-case class AdjMatGraph(mat: List[List[Int]]) extends AnyVal {
+case class AdjMatGraph(mat: List[List[Int]]) extends AnyVal   {
   override def toString: String = mat.map(_.mkString("  ")).mkString("\n")
 }
 

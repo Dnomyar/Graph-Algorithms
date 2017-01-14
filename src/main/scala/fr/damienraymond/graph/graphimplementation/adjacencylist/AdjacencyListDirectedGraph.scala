@@ -1,13 +1,16 @@
 package fr.damienraymond.graph
+package graphimplementation.adjacencylist
 
-import scala.collection.immutable.Seq
+import fr.damienraymond.graph.model.NodeDirected
+import fr.damienraymond.graph.model.matgraph.AdjMatGraph
+import fr.damienraymond.graph.{IDirectedGraph, IUndirectedGraph}
 
 /**
   * Created by damien on 11/01/2017.
   */
 class AdjacencyListDirectedGraph(nodes: List[NodeDirected]) extends IDirectedGraph {
 
-  override lazy val nbEdges: Int = nodes.map(_.successors.size).sum
+  override lazy val nbArcs: Int = nodes.map(_.successors.size).sum
   override lazy val nbNodes: Int = nodes.size
 
   override def isArc(x: Int, y: Int): Boolean =
@@ -54,9 +57,13 @@ class AdjacencyListDirectedGraph(nodes: List[NodeDirected]) extends IDirectedGra
         pred = getPredecessors(node.id)
       } yield NodeDirected(node.id, pred)
     })
+
+
+  override lazy val undirectedGraph: IUndirectedGraph = ???
 }
 
 object AdjacencyListDirectedGraph {
+
   def apply(mat: AdjMatGraph): AdjacencyListDirectedGraph = {
     val nodes =
       mat.mat.zipWithIndex.collect{

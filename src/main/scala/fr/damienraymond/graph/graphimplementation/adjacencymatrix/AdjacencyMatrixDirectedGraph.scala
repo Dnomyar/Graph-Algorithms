@@ -1,13 +1,15 @@
 package fr.damienraymond.graph
+package graphimplementation.adjacencymatrix
 
-import scala.collection.immutable.Seq
+import fr.damienraymond.graph.model.matgraph.AdjMatGraph
+import fr.damienraymond.graph.{IDirectedGraph, IUndirectedGraph}
 
 /**
   * Created by damien on 11/01/2017.
   */
 class AdjacencyMatrixDirectedGraph(graph: AdjMatGraph) extends IDirectedGraph {
 
-  override lazy val nbEdges: Int = graph.mat.map(_.count(_ == 1)).sum
+  override lazy val nbArcs: Int = graph.mat.map(_.count(_ == 1)).sum
   override lazy val nbNodes: Int = graph.mat.size
 
   override def isArc(x: Int, y: Int): Boolean =
@@ -51,6 +53,14 @@ class AdjacencyMatrixDirectedGraph(graph: AdjMatGraph) extends IDirectedGraph {
 
 
   override def toAdjacencyMatrix: AdjMatGraph = graph
+
+
+  lazy val inverse: AdjacencyMatrixDirectedGraph =
+    AdjacencyMatrixDirectedGraph(graph.mat.transpose)
+
+
+  override lazy val undirectedGraph: IUndirectedGraph = ???
+
 }
 
 object AdjacencyMatrixDirectedGraph {
@@ -60,8 +70,8 @@ object AdjacencyMatrixDirectedGraph {
   
   def apply(graph: IDirectedGraph): AdjacencyMatrixDirectedGraph =
     AdjacencyMatrixDirectedGraph(
-      (0 until graph.nbEdges).toList.map{ i =>
-        (0 until graph.nbEdges).toList.map{ j =>
+      (0 until graph.nbArcs).toList.map{ i =>
+        (0 until graph.nbArcs).toList.map{ j =>
           graph.isArc(i, j).toInt
         }
       }
