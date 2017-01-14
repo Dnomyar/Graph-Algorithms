@@ -40,8 +40,8 @@ class AdjacencyListUndirectedGraph(nodes: List[NodeUndirected]) extends IUndirec
     nodes.find(_.id == x).map(_.siblings).getOrElse(List.empty)
 
 
-  override def toAdjacencyMatrix: MatGraph =
-    MatGraph(
+  override def toAdjacencyMatrix: AdjMatGraph =
+    AdjMatGraph(
         (0 until nbNodes).map { i =>
           (0 until nbNodes).map { j =>
             (isEdge(i, j) || isEdge(j, i)).toInt

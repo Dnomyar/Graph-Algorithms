@@ -15,7 +15,7 @@ object GraphTools {
     * @return either
     *          - an error : if the graph is undirected and we try to generate
     */
-  def generateGraphData(graphOrder: Int, numberOfArcs: Int, isUndirected: Boolean): Either[String, MatGraph] = {
+  def generateGraphData(graphOrder: Int, numberOfArcs: Int, isUndirected: Boolean): Either[String, AdjMatGraph] = {
 
     if(graphOrder * 2 < numberOfArcs && isUndirected)
       return Left(s"The maximum of arc in graph with $graphOrder node is ${graphOrder * 2}, $numberOfArcs is too much !")
@@ -30,7 +30,7 @@ object GraphTools {
         }
       }
 
-    Right(MatGraph(mat))
+    Right(AdjMatGraph(mat))
   }
 
   def provideGenerator(graphOrder: Int, numberOfArcs: Int, isUndirected: Boolean): ArcGenerator =

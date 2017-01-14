@@ -3,16 +3,16 @@ package fr.damienraymond.graph
 /**
   * Created by damien on 10/01/2017.
   */
-case class MatGraph(mat: List[List[Int]]) extends AnyVal {
+case class AdjMatGraph(mat: List[List[Int]]) extends AnyVal {
   override def toString: String = mat.map(_.mkString("  ")).mkString("\n")
 }
 
-object MatGraph {
+object AdjMatGraph {
 
   /**
     * Build a MatGraph (List[List[Int]] => squared matrix) from List[Int]
     */
-  def fromList(list: List[Int]): MatGraph =
+  def fromList(list: List[Int]): AdjMatGraph =
     this (
       {
         val size = Math.sqrt(list.size.toDouble).toInt // squared matrix => sqrt

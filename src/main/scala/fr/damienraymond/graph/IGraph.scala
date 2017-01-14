@@ -6,6 +6,6 @@ package fr.damienraymond.graph
 trait IGraph {
 
   val nbNodes: Int
-  def toAdjacencyMatrix: MatGraph
+  def toAdjacencyMatrix: AdjMatGraph
 
 }
