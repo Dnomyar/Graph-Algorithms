@@ -10,17 +10,16 @@ class AdjacencyListUndirectedGraph(nodes: List[NodeUndirected]) extends IUndirec
   override lazy val nbEdges: Int = nodes.map(_.siblings.size).sum / 2
   override lazy val nbNodes: Int = nodes.size
 
-
   override def isEdge(x: Int, y: Int): Boolean =
-    nodes.exists(node => node.id == x && node.siblings.exists(_.id == y))
+    nodes.exists(node => node.id == x && node.siblings.contains(y))
 
   override def removeEdge(x: Int, y: Int): AdjacencyListUndirectedGraph =
     new AdjacencyListUndirectedGraph(
       nodes.mapIfDefined {
         case node if node.id == x =>
-          node.copy(siblings = node.siblings.filterNot(_.id == y))
+          node.copy(siblings = node.siblings.filterNot(_ == y))
         case node if node.id == y =>
-          node.copy(siblings = node.siblings.filterNot(_.id == x))
+          node.copy(siblings = node.siblings.filterNot(_ == x))
       }
     )
 
@@ -28,14 +27,14 @@ class AdjacencyListUndirectedGraph(nodes: List[NodeUndirected]) extends IUndirec
     new AdjacencyListUndirectedGraph(
       nodes.mapIfDefined {
         case node if node.id == x =>
-          node.copy(siblings = nodes.find(_.id == y).get :: node.siblings)
+          node.copy(siblings = node.siblings + nodes.find(_.id == y).get.id)
         case node if node.id == y =>
-          node.copy(siblings = nodes.find(_.id == x).get :: node.siblings)
+          node.copy(siblings = node.siblings + nodes.find(_.id == x).get.id)
       }
     )
 
-  override def getNeighbours(x: Int): List[NodeUndirected] =
-    nodes.find(_.id == x).map(_.siblings).getOrElse(List.empty)
+  override def getNeighbours(x: Int): Set[Int] =
+    nodes.find(_.id == x).map(_.siblings).getOrElse(List.empty).toSet
 
 
   override def toAdjacencyMatrix: AdjMatGraph =
@@ -49,7 +48,16 @@ class AdjacencyListUndirectedGraph(nodes: List[NodeUndirected]) extends IUndirec
 }
 
 object AdjacencyListUndirectedGraph {
-  def apply(mat: MatGraph): AdjacencyListUndirectedGraph = {
+
+  def apply(graph: IUndirectedGraph): AdjacencyListUndirectedGraph =
+    new AdjacencyListUndirectedGraph({
+      for {
+        i <- 0 until graph.nbEdges
+        siblings = graph.getNeighbours(i)
+      } yield NodeUndirected(i, siblings)
+    }.toList)
+  
+  def apply(mat: AdjMatGraph): AdjacencyListUndirectedGraph = {
     val nodes =
       mat.mat.zipWithIndex.collect{
         case (line, i) =>
@@ -57,16 +65,13 @@ object AdjacencyListUndirectedGraph {
             line.zipWithIndex.collect {
               case (el, j) if j > i && el == 1 => j
             }
-          (NodeUndirected(i), succs)
+          NodeUndirected(i, succs.toSet)
       }
 
     println(nodes)
 
-    new AdjacencyListUndirectedGraph(
-      nodes.map{
-        case (node, succs)  =>
-          node.copy(siblings = nodes.map(_._1).filter(node => succs.contains(node.id)))
-      }
-    )
+    new AdjacencyListUndirectedGraph(nodes)
   }
+
+
 }
