@@ -9,6 +9,6 @@ trait IUndirectedGraph extends IGraph {
   def isEdge(x: Int, y: Int): Boolean
   def removeEdge(x: Int, y: Int): IUndirectedGraph
   def addEdge(x: Int, y: Int): IUndirectedGraph
-  def getNeighbours(x: Int): List[Node]
+  def getNeighbours(x: Int): Set[Int]
 
 }

@@ -5,11 +5,11 @@ package fr.damienraymond.graph
   */
 trait IDirectedGraph extends IGraph {
 
-  def getNbArcs: Int
+  val nbEdges: Int
   def isArc(from: Int, to: Int): Boolean
-  def removeArc(from: Int, to: Int): Unit
-  def addArc(from: Int, to: Int): Unit
-  def getSuccessors(node: Int): List[Int]
-  def getPredecessors(node: Int): List[Int]
+  def removeArc(from: Int, to: Int): IDirectedGraph
+  def addArc(from: Int, to: Int): IDirectedGraph
+  def getSuccessors(node: Int): Set[Int]
+  def getPredecessors(node: Int): Set[Int]
 
 }
