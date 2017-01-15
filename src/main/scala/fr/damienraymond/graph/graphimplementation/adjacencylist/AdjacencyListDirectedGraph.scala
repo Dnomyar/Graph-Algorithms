@@ -1,14 +1,14 @@
 package fr.damienraymond.graph
 package graphimplementation.adjacencylist
 
-import fr.damienraymond.graph.model.NodeDirected
+import fr.damienraymond.graph.model.{NodeDirected, NodeUndirected}
 import fr.damienraymond.graph.model.matgraph.AdjMatGraph
 import fr.damienraymond.graph.{IDirectedGraph, IUndirectedGraph}
 
 /**
   * Created by damien on 11/01/2017.
   */
-class AdjacencyListDirectedGraph(nodes: List[NodeDirected]) extends IDirectedGraph {
+case class AdjacencyListDirectedGraph(nodes: List[NodeDirected]) extends IDirectedGraph {
 
   override lazy val nbArcs: Int = nodes.map(_.successors.size).sum
   override lazy val nbNodes: Int = nodes.size
@@ -59,7 +59,17 @@ class AdjacencyListDirectedGraph(nodes: List[NodeDirected]) extends IDirectedGra
     })
 
 
-  override lazy val undirectedGraph: IUndirectedGraph = ???
+  override lazy val undirectedGraph: IUndirectedGraph = {
+    val directedNodes: List[NodeUndirected] = nodes.map(node => NodeUndirected(node.id, node.successors))
+    new AdjacencyListUndirectedGraph(
+      nodes.foldLeft(directedNodes){ (acc, nodeDir) =>
+        acc.mapIfDefined {
+          case nodeUndir if nodeDir.successors.contains(nodeUndir.id) =>
+            nodeUndir.copy(siblings = nodeUndir.siblings + nodeDir.id)
+        }
+      }
+    )
+  }
 }
 
 object AdjacencyListDirectedGraph {

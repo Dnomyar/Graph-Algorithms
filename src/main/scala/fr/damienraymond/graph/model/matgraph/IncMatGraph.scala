@@ -9,7 +9,7 @@ package fr.damienraymond.graph.model.matgraph
   *   - line : node
   *
   */
-case class IncMatGraph(mat: List[List[Int]]) extends AnyVal {
+case class IncMatGraph(mat: List[List[Int]]) /*extends AnyVal*/ {
   override def toString: String = mat.map(_.mkString("  ")).mkString("\n")
 }
 

@@ -66,7 +66,7 @@ trait ContextUndirected {
   val n3 = NodeUndirected(2, Set(0, 1))
   val n4 = NodeUndirected(3, Set(1))
 
-  val graph = new AdjacencyListUndirectedGraph(List(n1, n2, n3, n4))
+  val graph = AdjacencyListUndirectedGraph(List(n1, n2, n3, n4))
 
   val graphMatrix = List(
     List(0, 1, 1, 0),

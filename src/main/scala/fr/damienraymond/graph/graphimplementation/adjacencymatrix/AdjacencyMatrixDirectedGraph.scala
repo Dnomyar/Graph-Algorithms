@@ -2,12 +2,11 @@ package fr.damienraymond.graph
 package graphimplementation.adjacencymatrix
 
 import fr.damienraymond.graph.model.matgraph.AdjMatGraph
-import fr.damienraymond.graph.{IDirectedGraph, IUndirectedGraph}
 
 /**
   * Created by damien on 11/01/2017.
   */
-class AdjacencyMatrixDirectedGraph(graph: AdjMatGraph) extends IDirectedGraph {
+case class AdjacencyMatrixDirectedGraph(graph: AdjMatGraph) extends IDirectedGraph {
 
   override lazy val nbArcs: Int = graph.mat.map(_.count(_ == 1)).sum
   override lazy val nbNodes: Int = graph.mat.size
@@ -18,7 +17,7 @@ class AdjacencyMatrixDirectedGraph(graph: AdjMatGraph) extends IDirectedGraph {
   private def updateGraph(x: Int, y: Int, value: Boolean) = {
     AdjacencyMatrixDirectedGraph(
       graph.mat.zipWithIndex.map {
-        case (line, i) if i == x && line.length < y =>
+        case (line, i) if i == x && line.length > y =>
           line.updated(y, value.toInt)
         case (line, _) => line
       }
@@ -43,12 +42,9 @@ class AdjacencyMatrixDirectedGraph(graph: AdjMatGraph) extends IDirectedGraph {
 
   override def getPredecessors(node: Int): Set[Int] =
     graph.mat
-      .flatMap{ line =>
-        line.zipWithIndex
-          .lift(node)
-          .filter(_._1 == 1)
-          .map(_._2)
-      }
+      .zipWithIndex
+      .map(line => (line._1.lift(node).filter(_ == 1), line._2))
+      .filter(_._1.isDefined).map(_._2)
       .toSet
 
 
@@ -59,7 +55,18 @@ class AdjacencyMatrixDirectedGraph(graph: AdjMatGraph) extends IDirectedGraph {
     AdjacencyMatrixDirectedGraph(graph.mat.transpose)
 
 
-  override lazy val undirectedGraph: IUndirectedGraph = ???
+  override lazy val undirectedGraph: IUndirectedGraph =
+    new AdjacencyMatrixUndirectedGraph(
+      AdjMatGraph(
+        graph.mat.zipWithIndex.map{
+          case (line, x) =>
+            line.zipWithIndex.map{
+              case (e, y) if e == 1 || graph.mat(y)(x) == 1 => 1
+              case _ => 0
+            }
+        }
+      )
+    )
 
 }
 

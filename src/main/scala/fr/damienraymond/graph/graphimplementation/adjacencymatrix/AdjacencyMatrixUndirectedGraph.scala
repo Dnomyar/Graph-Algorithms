@@ -7,7 +7,7 @@ import fr.damienraymond.graph.model.matgraph.AdjMatGraph
 /**
   * Created by damien on 11/01/2017.
   */
-class AdjacencyMatrixUndirectedGraph(graph: AdjMatGraph) extends IUndirectedGraph {
+case class AdjacencyMatrixUndirectedGraph(graph: AdjMatGraph) extends IUndirectedGraph {
 
   override lazy val nbEdges: Int = graph.mat.map(_.count(_ == 1)).sum / 2
   override lazy val nbNodes: Int = graph.mat.size
@@ -15,17 +15,16 @@ class AdjacencyMatrixUndirectedGraph(graph: AdjMatGraph) extends IUndirectedGrap
   override def isEdge(x: Int, y: Int): Boolean =
     graph.mat.lift(x).flatMap(_.lift(y)).getOrElse(0) == 1
 
-  private def updateGraph(x: Int, y: Int, value: Boolean) = {
+  private def updateGraph(x: Int, y: Int, value: Boolean) =
     AdjacencyMatrixUndirectedGraph(
       graph.mat.zipWithIndex.map {
-        case (line, i) if i == x && line.length < y =>
+        case (line, i) if i == x && line.length > y =>
           line.updated(y, value.toInt)
-        case (line, i) if i == y && line.length < x =>
+        case (line, i) if i == y && line.length > x =>
           line.updated(x, value.toInt)
         case (line, _) => line
       }
     )
-  }
 
   override def removeEdge(x: Int, y: Int): AdjacencyMatrixUndirectedGraph =
     updateGraph(x, y, value = false)

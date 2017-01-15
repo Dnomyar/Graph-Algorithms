@@ -8,7 +8,7 @@ import fr.damienraymond.graph.model.NodeUndirected
 /**
   * Created by damien on 11/01/2017.
   */
-class AdjacencyListUndirectedGraph(nodes: List[NodeUndirected]) extends IUndirectedGraph {
+case class AdjacencyListUndirectedGraph(nodes: List[NodeUndirected]) extends IUndirectedGraph {
 
   override lazy val nbEdges: Int = nodes.map(_.siblings.size).sum / 2
   override lazy val nbNodes: Int = nodes.size
@@ -48,6 +48,7 @@ class AdjacencyListUndirectedGraph(nodes: List[NodeUndirected]) extends IUndirec
           }.toList
         }.toList
       )
+
 }
 
 object AdjacencyListUndirectedGraph {
@@ -62,18 +63,18 @@ object AdjacencyListUndirectedGraph {
   
   def apply(mat: AdjMatGraph): AdjacencyListUndirectedGraph = {
     val nodes =
-      mat.mat.zipWithIndex.collect{
+      mat.mat.zipWithIndex.map{
         case (line, i) =>
           val succs =
             line.zipWithIndex.collect {
-              case (el, j) if j > i && el == 1 => j
+              case (el, j) if el == 1 => j
             }
           NodeUndirected(i, succs.toSet)
       }
 
     println(nodes)
 
-    new AdjacencyListUndirectedGraph(nodes)
+    AdjacencyListUndirectedGraph(nodes)
   }
 
 
