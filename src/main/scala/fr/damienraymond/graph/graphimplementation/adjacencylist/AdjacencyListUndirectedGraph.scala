@@ -3,14 +3,14 @@ package graphimplementation.adjacencylist
 
 import fr.damienraymond.graph.model.matgraph.AdjMatGraph
 import fr.damienraymond.graph.IUndirectedGraph
-import fr.damienraymond.graph.model.NodeUndirected
+import fr.damienraymond.graph.model.UndirectedNode
 
 import scalaz.std.AllInstances._
 
 /**
   * Created by damien on 11/01/2017.
   */
-case class AdjacencyListUndirectedGraph(nodes: List[NodeUndirected]) extends IUndirectedGraph {
+case class AdjacencyListUndirectedGraph(nodes: List[UndirectedNode]) extends IUndirectedGraph {
 
   override lazy val nbEdges: Int = nodes.map(_.siblings.size).sum / 2
   override lazy val nbNodes: Int = nodes.size
@@ -60,7 +60,7 @@ object AdjacencyListUndirectedGraph {
       for {
         i <- 0 until graph.nbEdges
         siblings = graph.getNeighbours(i)
-      } yield NodeUndirected(i, siblings)
+      } yield UndirectedNode(i, siblings)
     }.toList)
   
   def apply(mat: AdjMatGraph): AdjacencyListUndirectedGraph = {
@@ -71,7 +71,7 @@ object AdjacencyListUndirectedGraph {
             line.zipWithIndex.collect {
               case (el, j) if el == 1 => j
             }
-          NodeUndirected(i, succs.toSet)
+          UndirectedNode(i, succs.toSet)
       }
 
     println(nodes)

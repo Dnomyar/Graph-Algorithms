@@ -1,6 +1,6 @@
 package fr.damienraymond.graph.graphimplementation.adjacencylist
 
-import fr.damienraymond.graph.model.NodeUndirected
+import fr.damienraymond.graph.model.UndirectedNode
 import fr.damienraymond.graph.model.matgraph.AdjMatGraph
 import org.scalatest._
 
@@ -61,10 +61,10 @@ class AdjacencyListUndirectedGraphTest extends WordSpec {
 }
 
 trait ContextUndirected {
-  val n1 = NodeUndirected(0, Set(1, 2))
-  val n2 = NodeUndirected(1, Set(0, 2, 3))
-  val n3 = NodeUndirected(2, Set(0, 1))
-  val n4 = NodeUndirected(3, Set(1))
+  val n1 = UndirectedNode(0, Set(1, 2))
+  val n2 = UndirectedNode(1, Set(0, 2, 3))
+  val n3 = UndirectedNode(2, Set(0, 1))
+  val n4 = UndirectedNode(3, Set(1))
 
   val graph = AdjacencyListUndirectedGraph(List(n1, n2, n3, n4))
 

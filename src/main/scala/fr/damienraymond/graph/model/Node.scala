@@ -5,5 +5,5 @@ trait Node {
 //  val successorsOrSiblings: List[Node]
 }
 
-case class NodeDirected(id: Int, successors: Set[Int] = Set.empty) extends Node
-case class NodeUndirected(id: Int, siblings: Set[Int] = Set.empty) extends Node
+case class DirectedNode(id: Int, successors: Set[Int] = Set.empty) extends Node
+case class UndirectedNode(id: Int, siblings: Set[Int] = Set.empty) extends Node

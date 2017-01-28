@@ -1,7 +1,7 @@
 package fr.damienraymond.graph.graphimplementation.adjacencylist
 
 import fr.damienraymond.graph.model.matgraph.AdjMatGraph
-import fr.damienraymond.graph.model.{NodeDirected, NodeUndirected}
+import fr.damienraymond.graph.model.{DirectedNode, UndirectedNode}
 import org.scalatest.WordSpec
 
 /**
@@ -93,24 +93,24 @@ class AdjacencyListDirectedGraphTest extends WordSpec {
 trait ContextDirected {
 
   val graph = new AdjacencyListDirectedGraph(List(
-    NodeDirected(0, Set(1, 2)),
-    NodeDirected(1, Set(0, 3)),
-    NodeDirected(2, Set(1)),
-    NodeDirected(3, Set(0, 2))
+    DirectedNode(0, Set(1, 2)),
+    DirectedNode(1, Set(0, 3)),
+    DirectedNode(2, Set(1)),
+    DirectedNode(3, Set(0, 2))
   ))
 
   val graphInverse = new AdjacencyListDirectedGraph(List(
-    NodeDirected(0, Set(1, 3)),
-    NodeDirected(1, Set(0, 2)),
-    NodeDirected(2, Set(0, 3)),
-    NodeDirected(3, Set(1))
+    DirectedNode(0, Set(1, 3)),
+    DirectedNode(1, Set(0, 2)),
+    DirectedNode(2, Set(0, 3)),
+    DirectedNode(3, Set(1))
   ))
 
   val graphUndirected = new AdjacencyListUndirectedGraph(List(
-    NodeUndirected(0, Set(1, 2, 3)),
-    NodeUndirected(1, Set(0, 2, 3)),
-    NodeUndirected(2, Set(0, 1, 3)),
-    NodeUndirected(3, Set(0, 1, 2))
+    UndirectedNode(0, Set(1, 2, 3)),
+    UndirectedNode(1, Set(0, 2, 3)),
+    UndirectedNode(2, Set(0, 1, 3)),
+    UndirectedNode(3, Set(0, 1, 2))
   ))
 
   val graphMatrix = List(
