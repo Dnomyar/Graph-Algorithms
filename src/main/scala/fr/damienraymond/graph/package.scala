@@ -1,7 +1,8 @@
-
 package fr.damienraymond
 
-import scala.language.implicitConversions
+import scalaz.{Ordering => O, _}
+
+import scala.language.{higherKinds, implicitConversions}
 
 package object graph {
 
@@ -18,7 +19,24 @@ package object graph {
   implicit def booleanToOption(b: Boolean): AsOption = new AsOption(b)
 
 
-  implicit class MySeq[A](r: Seq[A]) {
+  implicit class MySeq[A](override val collection: Seq[A])
+    extends MinBySafe[A, Seq]
+    with MapIfDefined[A, Seq]
+
+  implicit class MyList[A](override val collection: List[A])
+    extends MinBySafe[A, List]
+    with MapIfDefined[A, List]
+
+  implicit class MySet[A](override val collection: Set[A])
+    extends MinBySafe[A, Set]
+    with MapIfDefined[A, Set]
+
+
+
+  trait MapIfDefined[A, F[_]] {
+
+    val collection: F[A]
+
     /**
       * mapIfDefined applies a function f to all elements of a Seq
       *
@@ -42,22 +60,27 @@ package object graph {
       * @param f is a partial function.
       * @return the updated seq
       */
-    def mapIfDefined(f: PartialFunction[A, A]): Seq[A] = {
-      r.map(f.applyOrElse[A, A](_, identity))
-    }
+    def mapIfDefined(f: PartialFunction[A, A])(implicit fn: Functor[F]): F[A] =
+      fn.map(collection)(f.applyOrElse[A, A](_, identity))
+
   }
 
-  implicit class MyList[A](r: List[A]) {
-    /**
-      * mapIfDefined applies a function f to all elements of a List
-      *   idem than `def mapIfDefined(f: PartialFunction[A, A]): Seq[A]`
-      *
-      * @param f is a partial function.
-      * @return the updated list
-      */
-    def mapIfDefined(f: PartialFunction[A, A]): List[A] = {
-      r.map(f.applyOrElse[A, A](_, identity))
+
+  trait MinBySafe[A, F[_]] {
+
+    val collection: F[A]
+
+    def minBySafe[B](f: A => B)(implicit cmp: Ordering[B], fn: Foldable[F]): Option[A] = {
+      fn.foldLeft(collection, Option.empty[A]){
+        case (None, sib) => Some(sib)
+        case (Some(acc), sib) =>
+          if (cmp.lt(f(acc), f(sib))) Some(acc)
+          else Some(sib)
+      }
     }
+
   }
+
+
 
 }

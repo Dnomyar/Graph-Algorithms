@@ -5,6 +5,8 @@ import fr.damienraymond.graph.model.matgraph.AdjMatGraph
 import fr.damienraymond.graph.IUndirectedGraph
 import fr.damienraymond.graph.model.NodeUndirected
 
+import scalaz.std.AllInstances._
+
 /**
   * Created by damien on 11/01/2017.
   */
