@@ -1,77 +1,57 @@
 package fr.damienraymond.graph
 package graphimplementation.adjacencylist
 
-import fr.damienraymond.graph.model.{DirectedNode, UndirectedNode}
+import fr.damienraymond.graph.graphimplementation.{IUnweightedDirectedGraph, IUnweightedGraph}
+import fr.damienraymond.graph.model.{AbstractDirectedNode, AbstractUndirectedNode, DirectedNode, UndirectedNode}
 import fr.damienraymond.graph.model.matgraph.AdjMatGraph
 import fr.damienraymond.graph.{IDirectedGraph, IUndirectedGraph}
 
 import scalaz.std.AllInstances._
 
-/**
-  * Created by damien on 11/01/2017.
-  */
-case class AdjacencyListDirectedGraph(nodes: List[DirectedNode]) extends IDirectedGraph {
 
-  override lazy val nbArcs: Int = nodes.map(_.successors.size).sum
-  override lazy val nbNodes: Int = nodes.size
-
-  override def isArc(x: Int, y: Int): Boolean =
-    nodes.exists(node => node.id == x && node.successors.contains(y))
-
-  override def removeArc(x: Int, y: Int): AdjacencyListDirectedGraph =
-    new AdjacencyListDirectedGraph(
-      nodes.mapIfDefined {
-        case node if node.id == x =>
-          node.copy(successors = node.successors.filterNot(_ == y))
-      }
-    )
-
-  override def addArc(x: Int, y: Int): AdjacencyListDirectedGraph =
-    new AdjacencyListDirectedGraph(
-      nodes.mapIfDefined {
-        case node if node.id == x =>
-          node.copy(successors = node.successors + nodes.find(_.id == y).get.id)
-      }
-    )
+case class AdjacencyListDirectedGraph(nodes: Set[DirectedNode])
+  extends AbstractAdjacencyListGraph[Int, DirectedNode, IDirectedGraph[Int, DirectedNode]]
+    with IDirectedGraph[Int, DirectedNode]
+    with IUnweightedDirectedGraph[Int, DirectedNode] {
 
 
-  override def getSuccessors(node: Int): Set[Int] =
-    nodes.find(_.id == node).map(_.successors).getOrElse(List.empty).toSet
+  override lazy val undirectedGraph: IUndirectedGraph[Int] = {
+      val directedNodes: Set[UndirectedNode] =
+        nodes.map(node => UndirectedNode(node.id, node.successors))
+      new AdjacencyListUndirectedGraph(
+        nodes.foldLeft(directedNodes){ (acc, nodeDir) =>
+          acc.map {
+            case nodeUndir if nodeDir.successors.contains(nodeUndir.id) =>
+              nodeUndir.copy(siblings = nodeUndir.siblings + nodeDir.id)
+            case other => other
+          }
+        }
+      )
+    }
 
+  override lazy val inverse: IDirectedGraph[Int, DirectedNode] =
+    createGraph({
+        for{
+          node <- nodes
+          pred = getPredecessors(node.id)
+        } yield DirectedNode(node.id, pred)
+      })
+
+  override def createGraph(data: Set[DirectedNode]): IDirectedGraph[Int, DirectedNode] =
+    AdjacencyListDirectedGraph(data)
 
   override def getPredecessors(node: Int): Set[Int] =
-    nodes.filter(_.successors.exists(_ == node)).map(_.id).toSet
+    nodes.filter(_.successors.exists(_ == node)).map(_.id)
 
-  override def toAdjacencyMatrix: AdjMatGraph =
-    AdjMatGraph(
-        (0 until nbNodes).map { i =>
-          (0 until nbNodes).map { j =>
-            isArc(i, j).toInt
-          }.toList
-        }.toList
+  override def addArc(node1: Int, node2: Int): IDirectedGraph[Int, DirectedNode] =
+    new AdjacencyListDirectedGraph(
+        nodes.map {
+          case node if node.id == node1 =>
+            node.copy(successors = node.successors + nodes.find(_.id == node2).get.id)
+          case other => other
+        }
       )
 
-
-  lazy val inverse: AdjacencyListDirectedGraph =
-   new AdjacencyListDirectedGraph({
-      for{
-        node <- nodes
-        pred = getPredecessors(node.id)
-      } yield DirectedNode(node.id, pred)
-    })
-
-
-  override lazy val undirectedGraph: IUndirectedGraph = {
-    val directedNodes: List[UndirectedNode] = nodes.map(node => UndirectedNode(node.id, node.successors))
-    new AdjacencyListUndirectedGraph(
-      nodes.foldLeft(directedNodes){ (acc, nodeDir) =>
-        acc.mapIfDefined {
-          case nodeUndir if nodeDir.successors.contains(nodeUndir.id) =>
-            nodeUndir.copy(siblings = nodeUndir.siblings + nodeDir.id)
-        }
-      }
-    )
-  }
 }
 
 object AdjacencyListDirectedGraph {
@@ -89,6 +69,6 @@ object AdjacencyListDirectedGraph {
 
     println(nodes)
 
-    new AdjacencyListDirectedGraph(nodes)
+    new AdjacencyListDirectedGraph(nodes.toSet)
   }
 }

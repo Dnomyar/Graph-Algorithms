@@ -92,21 +92,21 @@ class AdjacencyListDirectedGraphTest extends WordSpec {
 
 trait ContextDirected {
 
-  val graph = new AdjacencyListDirectedGraph(List(
+  val graph = new AdjacencyListDirectedGraph(Set(
     DirectedNode(0, Set(1, 2)),
     DirectedNode(1, Set(0, 3)),
     DirectedNode(2, Set(1)),
     DirectedNode(3, Set(0, 2))
   ))
 
-  val graphInverse = new AdjacencyListDirectedGraph(List(
+  val graphInverse = new AdjacencyListDirectedGraph(Set(
     DirectedNode(0, Set(1, 3)),
     DirectedNode(1, Set(0, 2)),
     DirectedNode(2, Set(0, 3)),
     DirectedNode(3, Set(1))
   ))
 
-  val graphUndirected = new AdjacencyListUndirectedGraph(List(
+  val graphUndirected = new AdjacencyListUndirectedGraph(Set(
     UndirectedNode(0, Set(1, 2, 3)),
     UndirectedNode(1, Set(0, 2, 3)),
     UndirectedNode(2, Set(0, 1, 3)),

@@ -1,6 +1,8 @@
 package fr.damienraymond.graph
 package tree.binaryheap
 
+import scalaz.std.AllInstances._
+
 /**
   * A BinaryHeap is a binary tree
   * Each child of a node is either higher or equals than the node

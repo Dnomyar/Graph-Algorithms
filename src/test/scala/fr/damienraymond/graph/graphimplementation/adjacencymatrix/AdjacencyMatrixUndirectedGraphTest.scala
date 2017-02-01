@@ -1,3 +1,4 @@
+/*
 package fr.damienraymond.graph.graphimplementation.adjacencymatrix
 
 import fr.damienraymond.graph.model.matgraph.AdjMatGraph
@@ -67,4 +68,4 @@ trait ContextUndirected {
 
   val graph = AdjacencyMatrixUndirectedGraph(graphMatrix)
 
-}
+}*/

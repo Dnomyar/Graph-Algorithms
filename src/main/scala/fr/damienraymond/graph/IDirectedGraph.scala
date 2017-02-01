@@ -1,17 +1,29 @@
 package fr.damienraymond.graph
 
+import fr.damienraymond.graph.graphimplementation.adjacencylist.AbstractAdjacencyListGraph
+import fr.damienraymond.graph.model.Node
+
 /**
   * Created by damien on 11/01/2017.
   */
-trait IDirectedGraph extends IGraph {
+trait IDirectedGraph[T, U <: Node[T]] extends IGraph[T, IDirectedGraph[T, U]] {
 
-  val nbArcs: Int
-  val undirectedGraph: IUndirectedGraph
-  def isArc(from: Int, to: Int): Boolean
-  def removeArc(from: Int, to: Int): IDirectedGraph
-  def addArc(from: Int, to: Int): IDirectedGraph
-  def getSuccessors(node: Int): Set[Int]
-  def getPredecessors(node: Int): Set[Int]
+//  override type Graph = IDirectedGraph[T]
 
+  val inverse: IDirectedGraph[T, U]
+
+  val nbArcs: Int = nbLinks
+
+  val undirectedGraph: IUndirectedGraph[T]
+
+  def isArc(from: Int, to: Int): Boolean = isLink(from, to)
+
+  def removeArc(from: Int, to: Int): IDirectedGraph[T, U] = removeLink(from, to)
+
+//  def addArc(from: Int, to: Int): IDirectedGraph[T]
+
+  def getSuccessors(node: Int): Set[T] = getLinked(node)
+
+  def getPredecessors(node: Int): Set[T]
 
 }

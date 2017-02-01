@@ -3,65 +3,49 @@ package graphimplementation.adjacencylist
 
 import fr.damienraymond.graph.model.matgraph.AdjMatGraph
 import fr.damienraymond.graph.IUndirectedGraph
-import fr.damienraymond.graph.model.UndirectedNode
+import fr.damienraymond.graph.graphimplementation.{IUnweightedGraph, IUnweightedUndirectedGraph}
+import fr.damienraymond.graph.model.{AbstractUndirectedNode, UndirectedNode, WeightedDirectedNode}
 
 import scalaz.std.AllInstances._
 
 /**
   * Created by damien on 11/01/2017.
   */
-case class AdjacencyListUndirectedGraph(nodes: List[UndirectedNode]) extends IUndirectedGraph {
+case class AdjacencyListUndirectedGraph(nodes: Set[UndirectedNode])
+  extends AbstractAdjacencyListGraph[Int, UndirectedNode, IUndirectedGraph[Int]]
+    with IUndirectedGraph[Int]
+    with IUnweightedUndirectedGraph[Int] {
 
-  override lazy val nbEdges: Int = nodes.map(_.siblings.size).sum / 2
-  override lazy val nbNodes: Int = nodes.size
 
-  override def isEdge(x: Int, y: Int): Boolean =
-    nodes.exists(node => node.id == x && node.siblings.contains(y))
+  override val nbLinks: Int = nodes.toList.map(_.successorsOrSiblings.size).sum / 2
+  override val nbEdges: Int = nbLinks
 
-  override def removeEdge(x: Int, y: Int): AdjacencyListUndirectedGraph =
+  override def createGraph(data: Set[UndirectedNode]): IUndirectedGraph[Int] =
+    AdjacencyListUndirectedGraph(data)
+
+
+  override def addEdge(node1: Int, node2: Int): IUndirectedGraph[Int] =
     new AdjacencyListUndirectedGraph(
-      nodes.mapIfDefined {
-        case node if node.id == x =>
-          node.copy(siblings = node.siblings.filterNot(_ == y))
-        case node if node.id == y =>
-          node.copy(siblings = node.siblings.filterNot(_ == x))
-      }
-    )
-
-  override def addEdge(x: Int, y: Int): AdjacencyListUndirectedGraph =
-    new AdjacencyListUndirectedGraph(
-      nodes.mapIfDefined {
-        case node if node.id == x =>
-          node.copy(siblings = node.siblings + nodes.find(_.id == y).get.id)
-        case node if node.id == y =>
-          node.copy(siblings = node.siblings + nodes.find(_.id == x).get.id)
-      }
-    )
-
-  override def getNeighbours(x: Int): Set[Int] =
-    nodes.find(_.id == x).map(_.siblings).getOrElse(List.empty).toSet
-
-
-  override def toAdjacencyMatrix: AdjMatGraph =
-    AdjMatGraph(
-        (0 until nbNodes).map { i =>
-          (0 until nbNodes).map { j =>
-            (isEdge(i, j) || isEdge(j, i)).toInt
-          }.toList
-        }.toList
+        nodes.map {
+          case node if node.id == node1 =>
+            node.copy(siblings = node.siblings + nodes.find(_.id == node2).get.id)
+          case node if node.id == node2 =>
+            node.copy(siblings = node.siblings + nodes.find(_.id == node1).get.id)
+          case other => other
+        }
       )
 
 }
 
 object AdjacencyListUndirectedGraph {
 
-  def apply(graph: IUndirectedGraph): AdjacencyListUndirectedGraph =
-    new AdjacencyListUndirectedGraph({
+  def apply(graph: IUndirectedGraph[Int]): AdjacencyListUndirectedGraph =
+    AdjacencyListUndirectedGraph({
       for {
         i <- 0 until graph.nbEdges
         siblings = graph.getNeighbours(i)
       } yield UndirectedNode(i, siblings)
-    }.toList)
+    }.toSet)
   
   def apply(mat: AdjMatGraph): AdjacencyListUndirectedGraph = {
     val nodes =
@@ -76,7 +60,7 @@ object AdjacencyListUndirectedGraph {
 
     println(nodes)
 
-    AdjacencyListUndirectedGraph(nodes)
+    AdjacencyListUndirectedGraph(nodes.toSet)
   }
 
 

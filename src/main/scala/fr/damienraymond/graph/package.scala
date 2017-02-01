@@ -1,6 +1,6 @@
 package fr.damienraymond
 
-import scalaz.{Ordering => O, _}
+import scalaz.{Ordering => _,  _}
 
 import scala.language.{higherKinds, implicitConversions}
 
