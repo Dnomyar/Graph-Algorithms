@@ -16,6 +16,8 @@ case class AdjacencyListDirectedWeightGraph(nodes: Set[WeightedDirectedNode])
     with IDirectedGraph[Weighted, WeightedDirectedNode]
     with IWeightedDirectedGraph[Weighted, WeightedDirectedNode] {
 
+  override val nbLinks: Int = nodes.toList.map(_.successorsOrSiblings.size).sum
+  override val nbArcs: Int = nbLinks
 
   override def createGraph(data: Set[WeightedDirectedNode]): IDirectedGraph[Weighted, WeightedDirectedNode] =
     AdjacencyListDirectedWeightGraph(data)

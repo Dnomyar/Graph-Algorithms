@@ -23,7 +23,7 @@ trait IGraph[T, R <: IGraph[T, R]] {
   def removeLink(node1: Int, node2: Int): R
   def isLink(node1: Int, node2: Int): Boolean
 
-  // successors or predecessors
+  // successors or siblings
   def getLinked(node: Int): Set[T]
 
   def getLinkedNodes(node: Int): Set[Int]

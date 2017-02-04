@@ -14,6 +14,8 @@ case class AdjacencyListDirectedGraph(nodes: Set[DirectedNode])
     with IDirectedGraph[Int, DirectedNode]
     with IUnweightedDirectedGraph[Int, DirectedNode] {
 
+  override val nbLinks: Int = nodes.toList.map(_.successorsOrSiblings.size).sum
+  override val nbArcs: Int = nbLinks
 
   override lazy val undirectedGraph: IUndirectedGraph[Int] = {
       val directedNodes: Set[UndirectedNode] =

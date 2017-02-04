@@ -9,14 +9,13 @@ import fr.damienraymond.graph.model.matgraph.AdjMatGraph
   * Created by damien on 11/01/2017.
   */
 
-trait AbstractAdjacencyListGraph[T, U <: Node[T], R <: IGraph[T, R]] extends IGraph[T, R] /*with GraphFactory[T, U]*/ {
+trait AbstractAdjacencyListGraph[T, U <: Node[T], R <: IGraph[T, R]] extends IGraph[T, R] {
 
 
   val nodes: Set[U]
 
   override val nbNodes: Int = nodes.size
   override val allNodes: Set[Int] = nodes.map(_.id)
-  override val nbLinks: Int = nodes.toList.map(_.successorsOrSiblings.size).sum
 
   def createGraph(data: Set[U]): R
 
@@ -32,7 +31,7 @@ trait AbstractAdjacencyListGraph[T, U <: Node[T], R <: IGraph[T, R]] extends IGr
   override def isLink(x: Int, y: Int): Boolean =
     nodes.exists(node => node.id == x && node.hasAsSuccessorsOrSiblings(y))
 
-  // successors or predecessors
+  // successors or siblings
   override def getLinked(node: Int): Set[T] =
     nodes.find(_.id == node).map(_.successorsOrSiblings).getOrElse(Set.empty)
 
