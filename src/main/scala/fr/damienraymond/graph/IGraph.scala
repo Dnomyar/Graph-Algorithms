@@ -14,6 +14,9 @@ trait IGraph[T, R <: IGraph[T, R]] {
       node2 <- allNodes
       if isLink(node1, node2)
     } yield (node1, node2)
+
+  val inverse: IGraph[T, R]
+
   def toAdjacencyMatrix: AdjMatGraph =
     AdjMatGraph(
       (0 until nbNodes).map { i =>

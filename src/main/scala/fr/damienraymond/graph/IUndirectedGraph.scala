@@ -16,4 +16,5 @@ trait IUndirectedGraph[T] extends IGraph[T, IUndirectedGraph[T]] {
   def getNeighbours(x: Int): Set[T] = getLinked(x)
 
 //  def addEdge(x: Int, y: Int): IUndirectedGraph[T]
+  override val inverse: IGraph[T, IUndirectedGraph[T]] = this
 }
