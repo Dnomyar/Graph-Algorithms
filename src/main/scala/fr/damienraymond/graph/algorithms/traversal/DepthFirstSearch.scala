@@ -1,39 +1,77 @@
 package fr.damienraymond.graph.algorithms.traversal
 
-import fr.damienraymond.graph.IUndirectedGraph
+import fr.damienraymond.graph.{IGraph, IUndirectedGraph}
 
 /**
   * Created by damien on 22/01/2017.
   */
 class DepthFirstSearch {
 
-  def visit(graph: IUndirectedGraph[Int],
+
+  /**
+    * Common DFS
+    * @param graph
+    * @param startNode
+    * @param depthFirstSearchState
+    * @tparam T
+    * @tparam R
+    * @return
+    */
+  def visit[T, R <: IGraph[T, R]](graph: IGraph[T, R],
             startNode: Int,
             depthFirstSearchState: DepthFirstSearchState = DefaultDepthFirstSearchState.empty
-           ): (Set[Int], DepthFirstSearchState) = {
+           ): (Set[Int], DepthFirstSearchState) =
 
-    def visit(graph: IUndirectedGraph[Int],
-              startNode: Int,
-              visitedNodes: Set[Int],
-              depthFirstSearchState: DepthFirstSearchState): (Set[Int], DepthFirstSearchState) = {
+    visitReq(graph, startNode, Set(startNode), depthFirstSearchState)
 
 
-      val depthFirstSearchStateAfterStart = depthFirstSearchState.start(startNode)
+  /**
+    * Ordered DFS visit of the graph
+    * @param graph
+    * @param visitNodeOrder
+    * @param depthFirstSearchState
+    * @tparam T
+    * @tparam R
+    * @return
+    */
+  def visitBy[T, R <: IGraph[T, R]](graph: IGraph[T, R],
+                                    visitNodeOrder: List[Int],
+                                    depthFirstSearchState: DepthFirstSearchState = DefaultDepthFirstSearchState.empty
+           ): (Set[Int], DepthFirstSearchState) =
 
-      val (res, depthFirstSearchStateEnd) =
-        graph.getNeighbours(startNode)
-          .foldLeft(visitedNodes, depthFirstSearchStateAfterStart){
-            case ((acc, depthFirstSearchStateAcc), neighbour) =>
-              if(acc contains neighbour)
-                (acc, depthFirstSearchStateAcc)
-              else
-                visit(graph, neighbour, acc + neighbour, depthFirstSearchStateAcc)
-          }
-
-      (res, depthFirstSearchStateEnd.end(startNode))
+    visitNodeOrder.headOption match {
+      case Some(node) =>
+        visitReq(graph, node, Set(node), depthFirstSearchState, node => - visitNodeOrder.indexOf(node))
+      case None => (Set.empty, DefaultDepthFirstSearchState.empty)
     }
 
-    visit(graph, startNode, Set(startNode), depthFirstSearchState)
+
+
+
+  private def visitReq[T, R <: IGraph[T, R]](graph: IGraph[T, R],
+                    startNode: Int,
+                    visitedNodes: Set[Int],
+                    depthFirstSearchState: DepthFirstSearchState,
+                    sort: Int => Int = identity): (Set[Int], DepthFirstSearchState) = {
+
+
+    val depthFirstSearchStateAfterStart = depthFirstSearchState.start(startNode)
+
+    val (res, depthFirstSearchStateEnd) =
+      graph.getLinkedNodes(startNode)
+        .diff(depthFirstSearchStateAfterStart.visitedNodes)
+        .toList
+        .sortBy(sort)
+        .foldLeft(visitedNodes, depthFirstSearchStateAfterStart){
+          case ((acc, depthFirstSearchStateAcc), neighbour) =>
+            if(acc contains neighbour)
+              (acc, depthFirstSearchStateAcc)
+            else
+              visitReq(graph, neighbour, acc + neighbour, depthFirstSearchStateAcc)
+        }
+
+    (res, depthFirstSearchStateEnd.end(startNode))
   }
+
 
 }
