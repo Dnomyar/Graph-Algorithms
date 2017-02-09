@@ -8,13 +8,14 @@ import fr.damienraymond.graph.{IDirectedGraph, IUndirectedGraph}
   */
 trait IUnweightedGraph {
 
+  //val allLinks: Set[(Int, Int)]
 //  def add(node1: Int, node2: Int): IUnweightedGraph
-
 }
 
 
 trait IWeightedGraph {
 
+  //val allLinks: Set[((Int, Int), Int)]
   def getWeight(node1: Int, node2: Int): Option[Int]
 //  def add(node1: Int, node2: Int, weight: Int): IWeightedGraph
 

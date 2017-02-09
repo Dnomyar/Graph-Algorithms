@@ -8,6 +8,12 @@ trait IGraph[T, R <: IGraph[T, R]] {
   val nbNodes: Int
   val allNodes: Set[Int]
 
+  lazy val allLinks: Set[(Int, Int)] =
+    for{
+      node1 <- allNodes
+      node2 <- allNodes
+      if isLink(node1, node2)
+    } yield (node1, node2)
   def toAdjacencyMatrix: AdjMatGraph =
     AdjMatGraph(
       (0 until nbNodes).map { i =>
