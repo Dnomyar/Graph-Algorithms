@@ -3,8 +3,7 @@ package algorithms.minspanningtree
 
 //import scalaz._
 import scalaz.std.AllInstances._
-import fr.damienraymond.graph.IUndirectedGraph
-import fr.damienraymond.graph.graphimplementation.IWeightedGraph
+import fr.damienraymond.graph.{IUndirectedGraph, IWeightedGraph}
 import fr.damienraymond.graph.model.{Node, Weighted, WeightedDirectedNode}
 
 

@@ -1,8 +1,7 @@
 package fr.damienraymond.graph
 package graphimplementation.adjacencymatrix
 
-import fr.damienraymond.graph.IUndirectedGraph
-import fr.damienraymond.graph.graphimplementation.IUnweightedUndirectedGraph
+import fr.damienraymond.graph.{IUndirectedGraph, IUnweightedUndirectedGraph}
 import fr.damienraymond.graph.model.UndirectedNode
 import fr.damienraymond.graph.model.matgraph.AdjMatGraph
 

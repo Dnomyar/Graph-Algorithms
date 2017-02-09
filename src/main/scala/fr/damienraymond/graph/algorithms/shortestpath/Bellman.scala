@@ -1,7 +1,6 @@
 package fr.damienraymond.graph.algorithms.shortestpath
 
-import fr.damienraymond.graph.IGraph
-import fr.damienraymond.graph.graphimplementation.IWeightedGraph
+import fr.damienraymond.graph.{IGraph, IWeightedGraph}
 
 /**
   * Created by damien on 05/02/2017.

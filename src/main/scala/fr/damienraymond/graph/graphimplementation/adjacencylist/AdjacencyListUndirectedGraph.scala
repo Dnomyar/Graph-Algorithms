@@ -3,7 +3,6 @@ package graphimplementation.adjacencylist
 
 import fr.damienraymond.graph.model.matgraph.AdjMatGraph
 import fr.damienraymond.graph.IUndirectedGraph
-import fr.damienraymond.graph.graphimplementation.{IUnweightedGraph, IUnweightedUndirectedGraph}
 import fr.damienraymond.graph.model.{AbstractUndirectedNode, UndirectedNode, WeightedDirectedNode}
 
 import scalaz.std.AllInstances._

@@ -2,7 +2,6 @@ package fr.damienraymond.graph
 package graphimplementation.adjacencylist
 
 import fr.damienraymond.graph.IUndirectedGraph
-import fr.damienraymond.graph.graphimplementation.{IWeightedDirectedGraph, IWeightedGraph, IWeightedUndirectedGraph}
 import fr.damienraymond.graph.model.matgraph.AdjMatGraph
 import fr.damienraymond.graph.model.{UndirectedNode, Weighted, WeightedDirectedNode, WeightedUndirectedNode}
 
