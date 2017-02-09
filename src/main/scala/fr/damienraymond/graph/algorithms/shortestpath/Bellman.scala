@@ -8,18 +8,6 @@ import fr.damienraymond.graph.graphimplementation.IWeightedGraph
   */
 class Bellman {
 
-  type Distance = (Int, Option[Int])
-  type Distances = List[Distance]
-
-  private def min(dist1: Distance, dist2: Distance): Distance =
-    (dist1, dist2) match {
-      case ((_, Some(d1)), (_, Some(d2))) if d1 <= d2 => dist1
-      case ((_, Some(d1)), (_, Some(d2))) if d1 > d2 => dist2
-      case ((_, None), (_, Some(_))) => dist2
-      case ((_, Some(_)), (_, None)) => dist1
-      case ((_, None), (_, None)) => dist1
-    }
-
 
   def shortestPath[T, R <: IGraph[T, R]](graph: IGraph[T, R] with IWeightedGraph, startNode: Int): List[(Int, Option[Int])] = {
 
