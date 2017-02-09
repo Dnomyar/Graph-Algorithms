@@ -11,7 +11,7 @@ import scalaz.std.AllInstances._
 /**
   * Created by damien on 11/01/2017.
   */
-case class AdjacencyListDirectedWeightGraph(nodes: Set[WeightedDirectedNode])
+case class AdjacencyListDirectedWeightedGraph(nodes: Set[WeightedDirectedNode])
   extends AbstractAdjacencyListGraph[Weighted, WeightedDirectedNode, IDirectedGraph[Weighted, WeightedDirectedNode]]
     with IDirectedGraph[Weighted, WeightedDirectedNode]
     with IWeightedDirectedGraph[Weighted, WeightedDirectedNode] {
@@ -20,7 +20,7 @@ case class AdjacencyListDirectedWeightGraph(nodes: Set[WeightedDirectedNode])
   override val nbArcs: Int = nbLinks
 
   override def createGraph(data: Set[WeightedDirectedNode]): IDirectedGraph[Weighted, WeightedDirectedNode] =
-    AdjacencyListDirectedWeightGraph(data)
+    AdjacencyListDirectedWeightedGraph(data)
 
   override lazy val undirectedGraph: IUndirectedGraph[Weighted] = ???
 
@@ -35,7 +35,7 @@ case class AdjacencyListDirectedWeightGraph(nodes: Set[WeightedDirectedNode])
       })
 
   override def addArc(node1: Int, node2: Int, weight: Int): IDirectedGraph[Weighted, WeightedDirectedNode] =
-    AdjacencyListDirectedWeightGraph(
+    AdjacencyListDirectedWeightedGraph(
         nodes.map {
           case node if node.id == node1 =>
             node.copy(successors = node.successors + Weighted(nodes.find(_.id == node2).get.id, Int.MaxValue)) // TODO : ugly
@@ -50,7 +50,7 @@ case class AdjacencyListDirectedWeightGraph(nodes: Set[WeightedDirectedNode])
 
 }
 
-object AdjacencyListDirectedWeightGraph {
+object AdjacencyListDirectedWeightedGraph {
 
   def apply(mat: AdjMatGraph): AdjacencyListDirectedGraph = {
     val nodes =
