@@ -7,6 +7,8 @@ trait DepthFirstSearchState {
   val starts: Map[Int, Int]
   val ends: Map[Int, Int]
 
+  val visitedNodes: Set[Int] = starts.keys.toSet
+
   def start(node: Int): DepthFirstSearchState
   def end(node: Int): DepthFirstSearchState
 }
